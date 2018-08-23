@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inno.odag.mapper">
+
+  <select id="userOpenapi" parameterType="UserOpenapiDto" resultType="UserOpenapiDto">
+    SELECT * FROM user_openapi
+     <where>
+       <if test="userOpenapiNo != 0 and userOpenapiNo > 0">
+         AND user_openapi_no = #{userOpenapiNo}
+       </if>
+       <if test="openapiNo != 0 and openapiNo > 0">
+         AND openapi_no = #{openapiNo}
+       </if>
+       <if test="userNo != 0 and userNo > 0">
+         AND user_no = #{userNo}
+       </if>
+     </where>
+  </select>
+
+  <insert id="userOpenapiInsert" parameterType="UserOpenapiDto">
+    INSERT INTO user_openapi(
+                               user_openapi_no
+                             , openapi_no
+                             , update_time
+                             , user_no
+                             , openapi_state
+                            ) VALUES (
+                               #{userOpenapiNo}
+                             , #{openapiNo}
+                             , #{updateTime}
+                             , #{userNo}
+                             , #{openapiState}                             
+                            )
+  </insert>
+
+  <update id="userOpenapiUpdate" parameterType="UserOpenapiDto">
+    UPDATE user_openapi
+       <set>
+         <if test="openapiNo != 0 and openapiNo > 0">
+           openapi_no = #{openapiNo},
+         </if>
+         <if test="updateTime != null and updateTime != ''">
+           update_time = #{updateTime},
+         </if>
+         <if test="userNo != 0 and userNo > 0">
+           user_no = #{userNo}
+         </if>      
+       </set>
+     WHERE user_openapi_no = #{userOpenapiNo}
+  </update>
+
+  <delete id="userOpenapiDelete" parameterType="UserOpenapiDto">
+    DELETE FROM user_openapi WHERE user_openapi_no = #{userOpenapiNo}
+  </delete>
+  
+</mapper>

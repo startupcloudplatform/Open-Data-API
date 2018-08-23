@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inno.odag.mapper">
+
+	<insert id="communityInsert" parameterType="CommunityDto">
+		INSERT INTO community (community_title, community_contents, create_user_no, create_time, target)
+		VALUES (#{communityTitle}, #{communityContents}, #{createUserNo}, #{createTime}, #{target})
+	</insert>
+
+	<select id="community" resultType="CommunityDto" parameterType="CommunityDto">
+		SELECT * FROM community
+		<where>
+			<if test="communityNo != null and communityNo != ''">
+				AND community_no = #{communityNo}
+			</if>
+		</where>
+	</select>
+
+	<select id="communityDetail" resultType="CommunityDto" parameterType="CommunityDto">
+		SELECT * FROM community
+		<where>
+			<if test="communityNo != null and communityNo != ''">
+				AND community_no = #{communityNo}
+			</if>
+		</where>
+		UNION ALL(SELECT * FROM community WHERE <![CDATA[community_no<#{communityNo}]]> ORDER BY community_no DESC LIMIT 1)
+		UNION ALL(SELECT * FROM community WHERE <![CDATA[community_no>#{communityNo}]]> ORDER BY community_no ASC LIMIT 1)
+	</select>
+
+	<select id="communityList" resultType="CommunityDto" parameterType="CommunityDto">
+		SELECT * FROM community
+	</select>
+
+	<select id="communityGroupList" resultType="CommunityDto" parameterType="Map">
+		SELECT * FROM community ORDER BY community_no ASC LIMIT #{communityGroupNum} OFFSET #{currentPage}
+	</select>
+
+	<select id="communityNumber" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM community
+	</select>
+
+	<update id="communityUpdate" parameterType="CommunityDto">
+		UPDATE community
+		<set>
+		  <if test="communityTitle != null and communityTitle !=''">
+		    community_title = #{communityTitle},
+		  </if>
+		  <if test="communityContents != null and communityContents !=''">
+		    community_contents = #{communityContents},
+		  </if>
+		  <if test="target != null and target !=''">
+		    target = #{target},
+		  </if>
+		  <if test="updateUserNo != null and updateUserNo !=''">
+		    update_user_no = #{updateUserNo},
+		  </if>
+		  <if test="updateTime != null and updateTime !=''">
+		    update_time = #{updateTime}
+		  </if>
+		</set>
+		WHERE community_no = #{communityNo}
+	</update>
+	
+	<delete id="communityDelete" parameterType="CommunityDto">
+		DELETE FROM community WHERE community_no = #{communityNo}
+	</delete>
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inno.odag.mapper">
+	<insert id="communityReplyInsert" parameterType="CommunityReplyDto">
+		INSERT INTO community_reply (community_reply_title, community_reply_contents, community_no, create_user_no, create_user_name, create_time)
+		VALUES (#{communityReplyTitle}, #{communityReplyContents}, #{communityNo}, #{createUserNo}, #{createUserName}, #{createTime})
+	</insert>
+
+	<select id="communityReply" resultType="CommunityReplyDto" parameterType="CommunityReplyDto">
+		SELECT * FROM community_reply
+		<where>
+			<if test="communityReplyNo != null and communityReplyNo != ''">
+				AND community_reply_no = #{communityReplyNo},
+			</if>
+			<if test="communityNo != null and communityNo != ''">
+				AND community_no = #{communityNo}
+			</if>
+		</where>
+	</select>
+
+	<select id="communityReplyList" resultType="CommunityReplyDto" parameterType="CommunityReplyDto">
+		SELECT * FROM community_reply
+		<where>
+			<if test="communityNo != null and communityNo != ''">
+				AND community_no = #{communityNo}
+			</if>
+		</where>
+	</select>
+
+	<update id="communityReplyUpdate" parameterType="CommunityReplyDto">
+		UPDATE community_reply
+		<set>
+		  <if test="communityReplyTitle != null and communityReplyTitle !=''">
+		    community_reply_title = #{communityReplyTitle},
+		  </if>
+		  <if test="communityReplyContents != null and communityReplyContents !=''">
+		    community_reply_contents = #{communityReplyContents},
+		  </if>
+		  <if test="updateUserNo != null and updateUserNo !=''">
+		    update_user_no = #{updateUserNo},
+		  </if>
+		  <if test="updateUserName != null and updateUserName !=''">
+		    update_user_name = #{updateUserName},
+		  </if>
+		  <if test="updateTime != null and updateTime !=''">
+		    update_time = #{updateTime}
+		  </if>
+		</set>
+		WHERE community_reply_no = #{communityReplyNo}
+	</update>
+	
+	<delete id="communityReplyDelete" parameterType="CommunityReplyDto">
+		DELETE FROM community_reply WHERE community_reply_no = #{communityReplyNo}
+	</delete>
+</mapper>

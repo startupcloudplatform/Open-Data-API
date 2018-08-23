@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inno.odag.mapper">
+
+	<insert id="openapiInsert" parameterType="OpenapiDto">
+		INSERT INTO openapi (update_time, openapi_name, openapi_category, openapi_use_type, openapi_result_type, openapi_provider, openapi_comment, openapi_use_url, openapi_join_url, openapi_keyword, user_no)		
+		VALUES (CURRENT_TIMESTAMP(), #{openapiName}, #{openapiCategory}, #{openapiUseType}, #{openapiResultType}, #{openapiProvider}, #{openapiComment}, #{openapiUseUrl}, #{openapiJoinUrl}, #{openapiKeyword}, #{userNo})
+	</insert>
+
+	<select id="openapi" resultType="OpenapiDto" parameterType="OpenapiDto">
+		SELECT *, (openapi_cnt_use*2+openapi_cnt_download*2+openapi_cnt_bookmark) AS score FROM openapi
+		<where>
+			<if test="openapiNo != null and openapiNo != ''">
+			  AND openapi_no = #{openapiNo}
+			</if>
+
+			<if test="userNo != null and userNo != ''">
+			  AND user_no = #{userNo}
+			</if>
+
+			<if test="openapiName != null and openapiName != ''">
+			  AND openapi_name LIKE CONCAT('%', #{openapiName}, '%')
+			</if>
+
+            <if test="openapiCategory != null and openapiCategory !=''">
+              AND openapi_category LIKE CONCAT(#{openapiCategory}, '%')
+              ORDER BY score DESC LIMIT 10
+            </if>
+
+			<if test="openapiProvider != null and openapiProvider != ''">
+			  AND openapi_provider = #{openapiProvider}
+			</if>
+			
+			
+		</where>
+	</select>
+
+	<select id="openapiSearch" resultType="OpenapiDto" parameterType="SearchDto">
+		SELECT * FROM openapi
+		<where>
+			<if test="searchKeyword != null and searchKeyword !=''">
+			  AND openapi_name LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+		</where>
+	</select>
+
+	<select id="openapiGroupList" resultType="OpenapiDto" parameterType="Map">
+		SELECT * FROM openapi 
+		<where>
+			<if test="openapiNo != null and openapiNo != ''">
+			  AND openapi_no = #{openapiNo}
+			</if>
+			<if test="userNo != null and userNo != ''">
+			  AND user_no = #{userNo}
+			</if>
+			<if test="openapiName != null and openapiName != ''">
+			  AND openapi_name LIKE CONCAT('%', #{openapiName}, '%')
+			</if>
+            <if test="openapiCategory != null and openapiCategory !=''">
+              AND openapi_category LIKE CONCAT(#{openapiCategory}, '%')
+            </if>
+			<if test="openapiProvider != null and openapiProvider != ''">
+			  AND openapi_provider = #{openapiProvider}
+			</if>
+			<if test="openapiUseType != null and openapiUseType != ''">
+			  AND openapi_use_type = #{openapiUseType}
+			</if>
+		</where>
+		ORDER BY openapi_no ASC LIMIT #{openapiGroupNum} OFFSET #{currentPage}
+	</select>
+
+	<select id="populaOpenapi" resultType="OpenapiDto" parameterType="SearchDto">
+		SELECT *, (openapi_cnt_use+openapi_cnt_download+openapi_cnt_bookmark) AS score  FROM openapi
+		ORDER BY score DESC LIMIT 10
+	</select>
+
+	<select id="populaUseOpenapi" resultType="OpenapiDto" parameterType="SearchDto">
+		SELECT * FROM openapi
+		WHERE openapi_use_type = 2
+		ORDER BY openapi_cnt_use DESC LIMIT 10
+	</select>
+
+	<select id="populaDownloadOpenapi" resultType="OpenapiDto" parameterType="SearchDto">
+		SELECT * FROM openapi
+		WHERE openapi_use_type = 1
+		ORDER BY openapi_cnt_download DESC LIMIT 10
+	</select>
+
+	<select id="populaBookmarkOpenapi" resultType="OpenapiDto" parameterType="SearchDto">
+		SELECT * FROM openapi
+		ORDER BY openapi_cnt_bookmark DESC LIMIT 10
+	</select>
+
+	<select id="openapiNumber" resultType="java.lang.Integer" parameterType="OpenapiDto">
+		SELECT COUNT(*) FROM openapi
+		<where>
+			<if test="openapiProvider != null and openapiProvider !=''">
+			  AND openapi_provider = #{openapiProvider}
+			</if>
+            <if test="openapiCategory != null and openapiCategory !=''">
+              AND openapi_category LIKE CONCAT(#{openapiCategory}, '%')
+            </if>
+		</where>
+	</select>
+
+	<select id="recentOpenapiNumber" resultType="java.lang.Integer" parameterType="OpenapiDto">
+		SELECT COUNT(*) FROM openapi 
+		<where>
+			<if test="updateTime != null and updateTime !=''">
+				update_time > timestamp(#{updateTime})
+			</if>
+		</where>
+	</select>
+
+	<update id="openapiUpdate" parameterType="OpenapiDto">
+		UPDATE openapi
+		<set>
+		  <if test="openapiName != null and openapiName !=''">
+		    openapi_name = #{openapiName},
+		  </if>
+		  <if test="openapiCategory != null and openapiCategory !=''">
+		    openapi_category = #{openapiCategory},
+		  </if>		  
+		  <if test="openapiUseType != null and openapiUseType !=''">
+		    openapi_use_type = #{openapiUseType},
+		  </if>
+		  <if test="openapiResultType != null and openapiResultType !=''">
+		    openapi_result_type = #{openapiResultType},
+		  </if>
+		  <if test="openapiProvider != null and openapiProvider !=''">
+		    openapi_provider = #{openapiProvider},
+		  </if>
+		  <if test="openapiComment != null and openapiComment !=''">
+		    openapi_comment = #{openapiComment},
+		  </if>
+		  <if test="openapiCntUse != null and openapiCntUse !=''">
+		    openapi_cnt_use = #{openapiCntUse},
+		  </if>		
+		  <if test="openapiCntDownload != null and openapiCntDownload !=''">
+		    openapi_cnt_download = #{openapiCntDownload},
+		  </if>
+		  <if test="openapiCntBookmark != null and openapiCntBookmark !=''">
+		    openapi_cnt_bookmark = #{openapiCntBookmark},
+		  </if>
+		  <if test="openapiUseUrl != null and openapiUseUrl !=''">
+		    openapi_use_url = #{openapiUseUrl},
+		  </if>
+		  <if test="openapiJoinUrl != null and openapiJoinUrl !=''">
+		    openapi_join_url = #{openapiJoinUrl},
+		  </if>
+		  <if test="openapiKeyword != null and openapiKeyword !=''">
+		    openapi_keyword = #{openapiKeyword}
+		  </if>
+		</set>
+		WHERE openapi_no = #{openapiNo}
+	</update>
+
+	<delete id="openapiDelete" parameterType="OpenapiDto">
+		DELETE FROM openapi WHERE openapi_no = #{openapiNo}
+	</delete>
+
+</mapper>

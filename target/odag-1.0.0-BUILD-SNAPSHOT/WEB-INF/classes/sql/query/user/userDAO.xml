@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inno.odag.mapper">
+
+	<insert id="userInsert" parameterType="UserDto">
+		INSERT INTO user (user_id, user_pw, user_name, user_type,
+		company_name, company_category, company_type, company_introduce, keyword)
+		VALUES (#{userId}, #{userPw}, #{userName}, #{userType},
+		#{companyName}, #{companyCategory}, #{companyType}, #{companyIntroduce},
+		#{keyword})
+	</insert>
+
+	<select id="user" resultType="UserDto">
+		SELECT * FROM user
+		<where>
+			<if test="userId != null and userId != ''">
+				AND user_id = #{userId}
+			</if>
+			<if test="userName != null and userName !=''">
+				AND user_name like '%'||#{userName}||'%'
+			</if>
+		</where>
+	</select>
+
+	<update id="userUpdate" parameterType="UserDto">
+		UPDATE user
+		<set>
+		  <if test="userPw != null and userPw !=''">
+		    user_pw = #{userPw},
+		  </if>
+		  <if test="userName != null and userName !=''">
+		    user_name = #{userName}
+		  </if>
+		</set>
+		WHERE user_id = #{userId}
+	</update>
+
+	<delete id="userDelete" parameterType="UserDto">
+		DELETE FROM user WHERE user_id = #{userId}
+	</delete>
+	
+</mapper>
