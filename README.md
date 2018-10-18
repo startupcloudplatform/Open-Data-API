@@ -1,11 +1,11 @@
 # Open-Data-API
 
-1. config 속성 파일 추가
+<b>1. config 속성 파일 추가</b><br>
 src/main/resources/config/properties 폴더에 아래 내용을 가진 config.properties 파일 추가
 
 login.ignorePatternUrl=/\,/login\,/userInfoList
 
-2. db 속성 파일 추가
+<b>2. db 속성 파일 추가</b><br>
 src/main/resource/config/properties 폴더에 아래 내용을 가진 db.properties 파일 추가
 
 jdbc.driverClassName=org.mariadb.jdbc.Driver<br>
