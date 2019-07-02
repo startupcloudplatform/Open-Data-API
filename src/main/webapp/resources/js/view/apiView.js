@@ -1,4 +1,0 @@
-/**
- * made by chung
- */
-
