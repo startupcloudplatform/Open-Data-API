@@ -33,7 +33,7 @@
     "path": "^0.12.7",
     "pg-promise": "^8.7.2",
     "postfix": "0.0.1",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "querystring": "^0.2.0",
     "rate-limiter-flexible": "^0.19.6",
     "request": "^2.88.0",
