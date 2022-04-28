@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "Router": "^2.1.0",
-    "async": "^2.6.2",
+    "async": "^2.6.4",
     "bluebird": "^3.5.5",
     "body-parser": "^1.19.0",
     "content-disposition": "^0.5.3",
